@@ -1,0 +1,10 @@
+# Dependencias top-level — TP Churn E-commerce
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+jupyter
+ipykernel
+notebook
+shap

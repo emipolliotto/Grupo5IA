@@ -1,0 +1,27 @@
+# Entorno Python
+venv/
+.venv/
+*.pyc
+__pycache__/
+*.pyo
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDE / Cursor
+.cursor/
+
+# Datos procesados (se generan en Fase 7+)
+data/processed/
+
+# Modelos entrenados (se generan en Fase 9+)
+models/*.pkl
+models/*.joblib
+
+# Reportes temporales
+reports/*.pdf
