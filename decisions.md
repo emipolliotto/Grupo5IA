@@ -9,7 +9,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | # | Título | Fase | Estado |
 |---|--------|------|--------|
 | 1 | Stack y estructura del repo | 1 | ✅ |
-| 2 | Pregunta de negocio central | 2 | pendiente |
+| 2 | Pregunta de negocio central | 2 | ✅ |
 | 3 | Tratamiento de nulos por columna | 4 | pendiente |
 | 4 | Hipótesis más fuerte del EDA | 5 | pendiente |
 | 5 | Veredicto Complain y leakage | 6 | borrador en `04_leakage_preliminar.md` |
@@ -32,4 +32,20 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **Anaconda global sin lockfile**: cada máquina instala versiones distintas → notebooks que corren en una PC y fallan en otra.
    - **Commitear `venv/`**: pesa gigas y no es portable entre Windows/Mac/Linux.
 
-4. **Consecuencias**: Setup documentado en `reports/setup_env_report.md`. Skills de data science linkeados desde `data-science-kit/` a `.agents/skills/`. Próximo paso: Fase 2 (contexto de negocio).
+4. **Consecuencias**: Setup documentado en `reports/setup_env_report.md`. Skills de data science linkeados desde `data-science-kit/` a `.agents/skills/`. Próximo paso: Fase 3 (EDA).
+
+---
+
+## Decisión — Pregunta de negocio central
+
+1. **Qué decidí**: La pregunta guía del TP es: *¿Qué clientes tienen mayor probabilidad de irse (churn) y qué señales de comportamiento reciente explican ese riesgo, para que el equipo de retención pueda intervenir de forma proactiva?* Stakeholder: Gerente de Retención / CRM. Target: `Churn` binario (1 = se fue, ~17%). Problema: clasificación supervisada desbalanceada sobre snapshot del último mes.
+
+2. **Por qué**: La consigna pide detectar riesgo de churn **y explicar por qué** — no alcanza con un dashboard de ventas. Esta pregunta une predicción (lista priorizada) con interpretación (playbooks de retención) y es testeable con las 18 features del dataset. Evita metas vagas ("entender al cliente") o técnicas sin dueño de negocio.
+
+3. **Alternativas que descarté**:
+   - **Solo clustering sin target**: agrupa perfiles pero no responde "¿quién se va?" — el gerente necesita una etiqueta de riesgo.
+   - **Predecir LTV / revenue**: no tenemos monto de pedido ni horizonte de ingresos; forzaría supuestos no auditables.
+   - **Pregunta solo descriptiva** ("¿cuál es el % de churn?"): ya lo sabemos (16,84%); no justifica modelo ni entrega del 19/06.
+   - **Survival analysis** (¿cuándo se va?): el dataset no trae fechas de evento; una foto estática no alcanza para tiempo-hasta-churn.
+
+4. **Consecuencias**: Contexto documentado en `reports/02_contexto_negocio.md`. El EDA (Fase 3–5) debe validar señales sospechosas (`SatisfactionScore`, `Complain`, `DaySinceLastOrder`, `Tenure`). La métrica principal se elige en Fase 9 con foco en **Recall** de churners. En la defensa oral hay que aclarar que el dataset es retrospectivo pero la lógica operativa es prospectiva (intervenir antes del churn).
