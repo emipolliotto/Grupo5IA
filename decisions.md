@@ -12,6 +12,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 2 | Pregunta de negocio central | 2 | ✅ |
 | 3 | Tratamiento de nulos por columna | 4 | ✅ |
 | 4 | Hipótesis más fuerte del EDA | 5 | ✅ |
+| 4b | Narrativa consultoría — segunda compra | 5 | ✅ |
 | 5 | Veredicto Complain y leakage | 6 | ✅ |
 | 6 | Split antes de limpiar + estratificado | 7 | ✅ |
 | 7 | Estrategia de imputación/encoding | 8 | pendiente |
@@ -71,17 +72,33 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 
 ## Decisión — Hipótesis más fuerte del EDA
 
-1. **Qué decidí**: La hipótesis principal del TP es: **los clientes con menos de 6 meses de antigüedad (`Tenure` < 6) tienen significativamente mayor probabilidad de churn que el resto** (35,0% vs 5,2%; lift 6,7×; correlación −0,35). Hipótesis secundaria más fuerte: **`Complain = 1` aumenta el churn** (31,7% vs 10,9%; lift 2,9×). Se refutan como hipótesis simples: “menor satisfacción → más churn” y “más días sin pedir → más churn”.
+1. **Qué decidí**: Seis hipótesis formales en `reports/01_hipotesis.md` (formato consigna: H₀/H₁, gráfico, test, interpretación). **Hipótesis principal (H1)**: clientes con `Tenure` < 6 churnean significativamente más (35,0% vs 5,2%; lift 6,7×; corr. −0,35). **Hipótesis secundaria (H2)**: `Complain = 1` aumenta el churn (31,7% vs 10,9%; lift 2,9×). **Refutadas (H3, H4)**: “menor satisfacción → más churn” (score alto = 20,5% vs bajo = 11,9%) y “más días sin pedir → más churn” (0–7 d = 19,2% vs 8–30 d = 9,4%). **Confirmadas en cruces (H5, H6)**: perfil “happy churner” (tenure < 6 + sat ≥ 4 + compra reciente + sin queja = 33,9% churn) y captación promocional sin retención (cupón alto + cashback bajo + tenure < 6 = 41,3% churn).
 
-2. **Por qué**: `Tenure` concentra el mayor contraste de churn y la correlación más alta con el target. Es interpretable para el gerente (“cliente nuevo = ventana crítica”) y orienta una acción clara (onboarding 0–180 días). `Complain` queda como segunda prioridad por accionabilidad inmediata. Descartar las hipótesis refutadas evita narrativas falsas en el reporte ejecutivo.
+2. **Por qué**: La consigna exige hipótesis con lógica de negocio **validadas** con gráfico y test — no solo correlaciones sueltas. `Tenure` concentra el mayor contraste y es accionable (onboarding 0–180 días). `Complain` es la segunda palanca por urgencia operativa. Refutar H3 y H4 evita recomendaciones falsas (“bajá el NPS” o “solo retengan inactivos”). H5 y H6 explican las paradojas del EDA (satisfacción alta + compra reciente + churn) con una narrativa de consultoría: **falla la segunda compra, no la primera**.
 
 3. **Alternativas que descarté**:
-   - **`Complain` como hipótesis #1**: lift menor (2,9× vs 6,7×) y riesgo de leakage a validar; queda como H2.
-   - **`SatisfactionScore` bajo → churn**: el EDA muestra lo opuesto en extremos (score 5 = 23,8% churn).
-   - **`DaySinceLastOrder` alto → churn**: clientes con compra reciente (0–7 d) tienen más churn que los de 8–30 d.
-   - **Segmentos categóricos** (Single, Mobile Phone): lift ~2× pero sin correlación fuerte ni narrativa causal clara.
+   - **`Complain` como hipótesis #1**: lift menor (2,9× vs 6,7×); queda H2.
+   - **Mantener H3/H4 sin refutar**: llevaría a acciones incorrectas ante el gerente.
+   - **Solo segmentos categóricos** (Single, Mobile Phone): lift ~2× sin narrativa causal fuerte ni test de interacción.
+   - **H5 como hipótesis principal**: lift menor que H1 y aplica a un subsegmento (n = 448); enriquece la historia pero no reemplaza a Tenure.
 
-4. **Consecuencias**: Documentado en `reports/06_hipotesis_eda.md`. El modelado debe priorizar `Tenure` y `Complain`; interacción crítica: tenure < 6 + queja ≈ 59% churn. En defensa oral: foco en retención temprana.
+4. **Consecuencias**: Detalle en `reports/01_hipotesis.md` y `reports/06_hipotesis_eda.md`. Cruces en `notebooks/01_eda.ipynb` §9–10. Modelado: priorizar `Tenure` y `Complain`; no forzar monotonía en `SatisfactionScore` ni `DaySinceLastOrder`. Interacción crítica: tenure < 6 + queja = 58,9% churn.
+
+---
+
+## Decisión — Narrativa consultoría — segunda compra
+
+1. **Qué decidí**: La historia que le cuento al gerente comercial no es “los clientes están insatisfechos” sino: **el churn es un problema de supervivencia temprana (H1) dentro del cual hay compradores que tienen buena primera experiencia pero no vuelven (H5)**. Las palancas son: (a) onboarding 30/60/90 días, (b) incentivo de segunda compra a los 14–30 días post-primer pedido, (c) playbook post-queja urgente en clientes nuevos, (d) auditar campañas de cupón que traen volumen sin retención (H6).
+
+2. **Por qué**: Los datos muestran señales aparentemente contradictorias — antigüedad baja, compra reciente, satisfacción alta y churn elevado coexisten. Eso no es ruido: es el perfil del **comprador eventual**. Un consultor no presenta cuatro gráficos sueltos; presenta un mecanismo: primera compra OK → sin hábito → churn. Esto cumple la consigna (“entender por qué nos dejan”) y diferencia el TP de un ejercicio técnico.
+
+3. **Alternativas que descarté**:
+   - **“Mejorar satisfacción general”**: H3 refutada — score 5 entre nuevos tiene 45,5% churn.
+   - **“Retener solo inactivos”**: H4 refutada — el riesgo está en quien compró hace 0–7 días (19,2% global; 36% si es nuevo).
+   - **“Más dispositivos = más lealtad”**: entre nuevos, 4 dispositivos = 35,6% churn vs 20% con 1 dispositivo — sugiere prueba, no hábito.
+   - **Ignorar cashback/cupón**: H6 muestra 41,3% churn en captación promocional vs 33,4% en otros nuevos.
+
+4. **Consecuencias**: Narrativa lista para reporte ejecutivo (19/06) y defensa oral. Limitación explícita: dataset es snapshot — no prueba estacionalidad ni causalidad. Correlación ≠ “cupón causa churn”; la recomendación es **auditar** campañas, no eliminarlas sin experimento.
 
 ---
 

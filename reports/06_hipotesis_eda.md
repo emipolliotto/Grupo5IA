@@ -2,8 +2,9 @@
 
 **Fecha**: 2026-06-11  
 **Fuentes**: `notebooks/01_eda.ipynb`, `reports/03_eda_exploratorio.md`  
-**Decisión registrada**: `decisions.md` #4  
-**Estado**: Fase 5 cerrada — hipótesis principal elegida y rankeadas.
+**Entregable consigna**: `reports/01_hipotesis.md` (H1–H6 con gráfico + test + interpretación)  
+**Decisión registrada**: `decisions.md` #4 y #4b  
+**Estado**: Fase 5 cerrada — hipótesis principal elegida, cruces validados.
 
 ---
 
@@ -107,6 +108,18 @@ Cliente **nuevo + queja** es el segmento más peligroso (casi 6 de cada 10 se va
 
 **Parcialmente refutada**: quien compró hace 0–7 días tiene **más** churn (19,2%) que quien lleva 8–30 días sin pedir (9,4%). El churn en este dataset **no es solo inactividad** — hay clientes activos que se van. Declararlo en la defensa oral.
 
+### H5 — Happy churner (cruce Fase 5)
+
+> Tenure < 6 + satisfacción ≥ 4 + compra 0–7 d + sin queja → **33,9%** churn (n = 448) vs control veteranos satisfechos **2,7%** (n = 965).
+
+**Lectura**: primera experiencia OK, sin segunda compra. Ver `reports/01_hipotesis.md` y decisión #4b.
+
+### H6 — Captación promocional (cruce Fase 5)
+
+> Tenure < 6 + cupón > mediana + cashback < mediana → **41,3%** churn (n = 412) vs otros nuevos **33,4%**.
+
+**Lectura**: campañas de cupón traen volumen pero retienen peor. Cashback medio menor en churners (160 vs 181).
+
 ---
 
 ## 5. Implicancias para el modelado (Fase 6+)
@@ -123,10 +136,12 @@ Cliente **nuevo + queja** es el segmento más peligroso (casi 6 de cada 10 se va
 
 ## 6. Criterio de cierre Fase 5
 
+- [x] Entregable consigna `reports/01_hipotesis.md` (H1–H6 con gráfico, test e interpretación)
 - [x] Hipótesis candidatas listadas y rankeadas con evidencia cuantitativa
 - [x] Hipótesis principal formalizada (H₀ / H₁)
-- [x] Hipótesis refutadas o matizadas documentadas (`SatisfactionScore`, `DaySinceLastOrder`)
-- [x] Decisión #4 en `decisions.md`
-- [x] Puente a Fase 6 (leakage de `Complain`) y modelado
+- [x] Hipótesis refutadas documentadas (H3, H4) y cruces confirmados (H5, H6)
+- [x] Decisión #4 y #4b en `decisions.md`
+- [x] Cruces reproducibles en `notebooks/01_eda.ipynb` §9–10
+- [x] Puente a modelado (Fase 8+)
 
 **STATUS Fase 5**: **CERRADA** — próximo paso: **Fase 6** (veredicto formal de `Complain` y leakage → decisión #5).
