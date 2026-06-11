@@ -11,7 +11,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 1 | Stack y estructura del repo | 1 | ✅ |
 | 2 | Pregunta de negocio central | 2 | ✅ |
 | 3 | Tratamiento de nulos por columna | 4 | ✅ |
-| 4 | Hipótesis más fuerte del EDA | 5 | pendiente |
+| 4 | Hipótesis más fuerte del EDA | 5 | ✅ |
 | 5 | Veredicto Complain y leakage | 6 | borrador en `04_leakage_preliminar.md` |
 | 6 | Split antes de limpiar + estratificado | 7 | pendiente |
 | 7 | Estrategia de imputación/encoding | 8 | pendiente |
@@ -66,3 +66,19 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **Un solo flag `any_missing`**: pierde el significado distinto del nulo según columna.
 
 4. **Consecuencias**: Detalle en `reports/05_tratamiento_nulos.md`. El pipeline de Fase 8 debe aprender medianas solo en train y generar 7 columnas extra de indicadores. En defensa oral: explicar que el missing es MNAR en varias columnas y por eso las banderas son features legítimas.
+
+---
+
+## Decisión — Hipótesis más fuerte del EDA
+
+1. **Qué decidí**: La hipótesis principal del TP es: **los clientes con menos de 6 meses de antigüedad (`Tenure` < 6) tienen significativamente mayor probabilidad de churn que el resto** (35,0% vs 5,2%; lift 6,7×; correlación −0,35). Hipótesis secundaria más fuerte: **`Complain = 1` aumenta el churn** (31,7% vs 10,9%; lift 2,9×). Se refutan como hipótesis simples: “menor satisfacción → más churn” y “más días sin pedir → más churn”.
+
+2. **Por qué**: `Tenure` concentra el mayor contraste de churn y la correlación más alta con el target. Es interpretable para el gerente (“cliente nuevo = ventana crítica”) y orienta una acción clara (onboarding 0–180 días). `Complain` queda como segunda prioridad por accionabilidad inmediata. Descartar las hipótesis refutadas evita narrativas falsas en el reporte ejecutivo.
+
+3. **Alternativas que descarté**:
+   - **`Complain` como hipótesis #1**: lift menor (2,9× vs 6,7×) y riesgo de leakage a validar; queda como H2.
+   - **`SatisfactionScore` bajo → churn**: el EDA muestra lo opuesto en extremos (score 5 = 23,8% churn).
+   - **`DaySinceLastOrder` alto → churn**: clientes con compra reciente (0–7 d) tienen más churn que los de 8–30 d.
+   - **Segmentos categóricos** (Single, Mobile Phone): lift ~2× pero sin correlación fuerte ni narrativa causal clara.
+
+4. **Consecuencias**: Documentado en `reports/06_hipotesis_eda.md`. El modelado debe priorizar `Tenure` y `Complain`; interacción crítica: tenure < 6 + queja ≈ 59% churn. En defensa oral: foco en retención temprana. Próximo paso: Fase 6 (experimento con/sin `Complain`).
