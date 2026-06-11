@@ -12,7 +12,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 2 | Pregunta de negocio central | 2 | ✅ |
 | 3 | Tratamiento de nulos por columna | 4 | ✅ |
 | 4 | Hipótesis más fuerte del EDA | 5 | ✅ |
-| 5 | Veredicto Complain y leakage | 6 | borrador en `04_leakage_preliminar.md` |
+| 5 | Veredicto Complain y leakage | 6 | ✅ |
 | 6 | Split antes de limpiar + estratificado | 7 | pendiente |
 | 7 | Estrategia de imputación/encoding | 8 | pendiente |
 | 8 | Métrica principal (no accuracy) | 9 | pendiente |
@@ -81,4 +81,19 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **`DaySinceLastOrder` alto → churn**: clientes con compra reciente (0–7 d) tienen más churn que los de 8–30 d.
    - **Segmentos categóricos** (Single, Mobile Phone): lift ~2× pero sin correlación fuerte ni narrativa causal clara.
 
-4. **Consecuencias**: Documentado en `reports/06_hipotesis_eda.md`. El modelado debe priorizar `Tenure` y `Complain`; interacción crítica: tenure < 6 + queja ≈ 59% churn. En defensa oral: foco en retención temprana. Próximo paso: Fase 6 (experimento con/sin `Complain`).
+4. **Consecuencias**: Documentado en `reports/06_hipotesis_eda.md`. El modelado debe priorizar `Tenure` y `Complain`; interacción crítica: tenure < 6 + queja ≈ 59% churn. En defensa oral: foco en retención temprana.
+
+---
+
+## Decisión — Veredicto Complain y leakage
+
+1. **Qué decidí**: Incluir `Complain` en el modelo final (**USAR**). Experimento A/B (RF y árbol, split 80/20 estratificado): sin `Complain`, Recall baja de 0,868 a 0,800 (−6,8 pp) pero el modelo sigue fuerte; `Tenure` domina la importancia (33–36%). `DaySinceLastOrder` y `OrderCount` se mantienen (**USAR** / **USAR CON TRANSPARENCIA**).
+
+2. **Por qué**: Leakage haría colapsar las métricas sin la variable o concentraría toda la importancia en ella. Ninguno de los dos ocurre. `Complain` aporta señal incremental accionable (playbook post-queja) sobre una base ya explicada por `Tenure`. El Data Dict la define como queja del último mes — coherente con uso predictivo.
+
+3. **Alternativas que descarté**:
+   - **Excluir `Complain` por precaución**: pierde 6,8 pp de Recall sin beneficio claro de robustez.
+   - **Usar solo `Complain` como feature de riesgo**: ignora que `Tenure` explica más y que el modelo funciona sin ella.
+   - **Descartar `DaySinceLastOrder`**: no hay evidencia de leakage técnico; solo proxy de actividad reciente a declarar en defensa.
+
+4. **Consecuencias**: Experimento reproducible en `src/leakage_experiment.py` y `reports/07_veredicto_complain_leakage.md`. Supuesto S7 cerrado. Modelo final incluye `Complain`. Próximo paso: Fase 7 (split formal antes de limpiar).

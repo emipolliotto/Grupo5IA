@@ -1,7 +1,7 @@
 # Auditoría preliminar de leakage — Fase 0 (cierre)
 
 **Fecha**: 2026-06-05  
-**Estado**: Preliminar — experimento con/sin `Complain` queda para Fase 6b del plan.
+**Estado**: Cerrado — experimento Fase 6 en [`07_veredicto_complain_leakage.md`](07_veredicto_complain_leakage.md).
 
 ---
 
@@ -94,6 +94,6 @@ Todos los valores observados son > 0 (no hay clientes con 0 pedidos en el mes en
 
 - [x] Cada variable sospechosa tiene veredicto documentado
 - [x] `Complain` tiene argumento temporal basado en Data Dict + datos
-- [ ] Experimento modelo con/sin `Complain` — pendiente Fase 6
+- [x] Experimento modelo con/sin `Complain` — ver `07_veredicto_complain_leakage.md`
 
-**S7 pasa de PARCIAL a VÁLIDO (preliminar)** con revisión obligatoria en Fase 6.
+**S7**: **VÁLIDO** — veredicto final `Complain` = **USAR** (Fase 6).
