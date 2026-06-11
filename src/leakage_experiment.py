@@ -18,10 +18,11 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
+
+from split import stratified_split
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data/raw/ecommerce.csv"
@@ -107,15 +108,11 @@ def evaluate_model(name: str, model, x_train, x_test, y_train, y_test) -> dict:
 
 
 def main() -> None:
-    df = add_missing_indicators(pd.read_csv(DATA_PATH))
-    x_full, y = build_xy(df, include_complain=True)
-    x_train, x_test, y_train, y_test = train_test_split(
-        x_full,
-        y,
-        test_size=TEST_SIZE,
-        random_state=RANDOM_STATE,
-        stratify=y,
-    )
+    train_df, test_df = stratified_split()
+    train_df = add_missing_indicators(train_df)
+    test_df = add_missing_indicators(test_df)
+    x_train, y_train = build_xy(train_df, include_complain=True)
+    x_test, y_test = build_xy(test_df, include_complain=True)
 
     x_train_no = x_train.drop(columns=[LEAKY_COL])
     x_test_no = x_test.drop(columns=[LEAKY_COL])

@@ -13,7 +13,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 3 | Tratamiento de nulos por columna | 4 | ✅ |
 | 4 | Hipótesis más fuerte del EDA | 5 | ✅ |
 | 5 | Veredicto Complain y leakage | 6 | ✅ |
-| 6 | Split antes de limpiar + estratificado | 7 | pendiente |
+| 6 | Split antes de limpiar + estratificado | 7 | ✅ |
 | 7 | Estrategia de imputación/encoding | 8 | pendiente |
 | 8 | Métrica principal (no accuracy) | 9 | pendiente |
 | 9 | Modelo ganador árbol vs RF | 11 | pendiente |
@@ -96,4 +96,20 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **Usar solo `Complain` como feature de riesgo**: ignora que `Tenure` explica más y que el modelo funciona sin ella.
    - **Descartar `DaySinceLastOrder`**: no hay evidencia de leakage técnico; solo proxy de actividad reciente a declarar en defensa.
 
-4. **Consecuencias**: Experimento reproducible en `src/leakage_experiment.py` y `reports/07_veredicto_complain_leakage.md`. Supuesto S7 cerrado. Modelo final incluye `Complain`. Próximo paso: Fase 7 (split formal antes de limpiar).
+4. **Consecuencias**: Experimento reproducible en `src/leakage_experiment.py` y `reports/07_veredicto_complain_leakage.md`. Supuesto S7 cerrado. Modelo final incluye `Complain`.
+
+---
+
+## Decisión — Split antes de limpiar + estratificado
+
+1. **Qué decidí**: Partir `data/raw/ecommerce.csv` en **80% train / 20% test** con `train_test_split(..., stratify=Churn, random_state=42)` **antes** de imputar, crear flags `*_missing` o encodear. Guardar en `data/processed/train.csv` y `test.csv` (crudos, con nulos). Manifest en `data/processed/split_manifest.json`.
+
+2. **Por qué**: Imputar o calcular estadísticas sobre el dataset completo filtra información del test al entrenamiento (leakage). Con ~17% de churn, un split aleatorio sin estratificar podría dejar el test con muy pocos positivos (~190 en test con estratificación). `random_state=42` alinea este split con el experimento de Fase 6.
+
+3. **Alternativas que descarté**:
+   - **Split después de imputar**: mediana global contamina el test.
+   - **K-fold como único esquema**: útil para tuning pero no reemplaza un hold-out final para el reporte.
+   - **70/30 o 90/10**: 80/20 balancea suficientes churners en test (~190) con train robusto (4.504 filas).
+   - **Estratificar por otra variable** (ej. `Tenure`): no es el target; el desbalance crítico es `Churn`.
+
+4. **Consecuencias**: Script `src/split.py`. Train 16,83% churn / test 16,87% churn. Fase 8 aprende medianas y encoders **solo en train**. Próximo paso: Fase 8 (pipeline de preprocesamiento).
