@@ -10,7 +10,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 |---|--------|------|--------|
 | 1 | Stack y estructura del repo | 1 | ✅ |
 | 2 | Pregunta de negocio central | 2 | ✅ |
-| 3 | Tratamiento de nulos por columna | 4 | pendiente |
+| 3 | Tratamiento de nulos por columna | 4 | ✅ |
 | 4 | Hipótesis más fuerte del EDA | 5 | pendiente |
 | 5 | Veredicto Complain y leakage | 6 | borrador en `04_leakage_preliminar.md` |
 | 6 | Split antes de limpiar + estratificado | 7 | pendiente |
@@ -49,3 +49,20 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **Survival analysis** (¿cuándo se va?): el dataset no trae fechas de evento; una foto estática no alcanza para tiempo-hasta-churn.
 
 4. **Consecuencias**: Contexto documentado en `reports/02_contexto_negocio.md`. El EDA (Fase 3–5) debe validar señales sospechosas (`SatisfactionScore`, `Complain`, `DaySinceLastOrder`, `Tenure`). La métrica principal se elige en Fase 9 con foco en **Recall** de churners. En la defensa oral hay que aclarar que el dataset es retrospectivo pero la lógica operativa es prospectiva (intervenir antes del churn).
+
+---
+
+## Decisión — Tratamiento de nulos por columna
+
+1. **Qué decidí**: No eliminar filas ni columnas. Las 7 columnas con nulos (`DaySinceLastOrder`, `OrderAmountHikeFromlastYear`, `Tenure`, `OrderCount`, `CouponUsed`, `HourSpendOnApp`, `WarehouseToHome`) se imputan con **mediana del set de entrenamiento** y se agrega un **indicador binario** `{columna}_missing` por cada una. Cada fila tiene como máximo un nulo entre estas siete (missing mutuamente excluyente). La imputación se ejecuta **después del split** (Fase 7–8); `data/raw/` no se toca.
+
+2. **Por qué**: Borrar filas costaría 1.856 registros (33%). El nulo no es aleatorio: en `Tenure` y `WarehouseToHome` el churn supera el 30% cuando falta el dato; en `CouponUsed` baja al 3%. Solo imputar con mediana sin bandera haría perder esa señal. Mediana en train evita sesgo extremo y no filtra información del test.
+
+3. **Alternativas que descarté**:
+   - **Listwise deletion**: pierde un tercio de la base y sesga el modelo.
+   - **Imputar antes del split o usando el target**: leakage.
+   - **Imputar todo con 0**: sin sentido para `Tenure` o distancia al depósito.
+   - **KNN / MICE**: complejidad innecesaria para ~5% de nulos por columna sin solapamiento.
+   - **Un solo flag `any_missing`**: pierde el significado distinto del nulo según columna.
+
+4. **Consecuencias**: Detalle en `reports/05_tratamiento_nulos.md`. El pipeline de Fase 8 debe aprender medianas solo en train y generar 7 columnas extra de indicadores. En defensa oral: explicar que el missing es MNAR en varias columnas y por eso las banderas son features legítimas.
