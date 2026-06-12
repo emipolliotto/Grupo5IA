@@ -88,4 +88,4 @@ El árbol es más simple y rápido, pero pierde en todas las métricas relevante
 - [x] Modelo final serializado
 - [x] Decisión #9 en `decisions.md`
 
-**STATUS Fase 10**: **CERRADA** — próximo paso: **Fase 11** (importancia ≠ causalidad → decisión #10).
+**STATUS Fase 10**: **CERRADA** — ver Fase 11 en `reports/12_importancia_no_causalidad.md`.

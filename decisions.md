@@ -18,7 +18,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 7 | Estrategia de imputación/encoding | 8 | ✅ |
 | 8 | Métrica principal (no accuracy) | 9 | ✅ |
 | 9 | Modelo ganador árbol vs RF | 10 | ✅ |
-| 10 | Importancia ≠ causalidad | 11 | pendiente |
+| 10 | Importancia ≠ causalidad | 11 | ✅ |
 
 ---
 
@@ -178,4 +178,20 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **Redes neuronales**: menos interpretables para la defensa oral y el reporte ejecutivo.
    - **Elegir por accuracy**: RF gana igual (89,7% vs 83,0%), pero la decisión ya estaba fijada en Recall.
 
-4. **Consecuencias**: Detalle en `reports/11_modelo_ganador.md` y `reports/model_comparison.json`. Modelo listo para reporte ejecutivo e interpretación (Fase 11). Próximo paso: Fase 11 — importancia ≠ causalidad (decisión #10).
+4. **Consecuencias**: Detalle en `reports/11_modelo_ganador.md` y `reports/model_comparison.json`. Modelo listo para reporte ejecutivo e interpretación (Fase 11).
+
+---
+
+## Decisión — Importancia ≠ causalidad
+
+1. **Qué decidí**: Las **importancias** del Random Forest (`Tenure` 32,9%, `Complain` 9,4%, etc.) describen **poder predictivo y asociación histórica**, no efectos causales. En comunicación al gerente y en la defensa oral usamos lenguaje de “riesgo”, “señal” y “priorización”; **no** afirmamos que manipular una feature garantiza cambiar el churn. Las recomendaciones (onboarding 0–180 días, playbook post-queja, auditar cupones) son **hipótesis de acción** basadas en evidencia observacional.
+
+2. **Por qué**: Confundir importancia con causalidad es el error más común al presentar ML a negocio. En este dataset hay ejemplos claros: `SatisfactionScore` alto se asocia a **más** churn (H3 refutada); `CashbackAmount` bajo puede ser **efecto** del desenganche, no causa; `Complain` puede ser síntoma y causa a la vez. Sin experimentos (A/B, RCT) el TP no puede cerrar causalidad — decirlo explícitamente es parte del rigor de la materia.
+
+3. **Alternativas que descarté**:
+   - **Narrar importancias como “drivers causales”**: viola H3 y H4; expone a preguntas del jurado.
+   - **Ignorar interpretabilidad y solo reportar métricas**: pierde el entregable de “explicar por qué” (Fase 2).
+   - **SHAP/causal inference avanzado** (DoWhy, IV): fuera de alcance y datos; no hay diseño experimental.
+   - **Eliminar variables “no causales”**: todas las features predictivas son asociativas; el modelo perdería Recall sin ganar causalidad.
+
+4. **Consecuencias**: Documentado en `reports/12_importancia_no_causalidad.md`. Frases modelo para defensa oral incluidas. **Índice de decisiones: 10/10 completadas.** Entregables finales pendientes: reporte ejecutivo consolidado y defensa del 19/06.
