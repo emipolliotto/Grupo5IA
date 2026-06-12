@@ -90,5 +90,4 @@ Reportaremos F1, Precision y ROC-AUC en el informe del 19/06, pero **el criterio
 - [x] Métricas secundarias documentadas
 - [x] Decisión #8 en `decisions.md`
 
-**STATUS Fase 9**: **CERRADA** — próximo paso: **Fase 11** (árbol vs Random Forest → decisión #9).  
-*(Fase 10 no está numerada en el plan; la decisión #10 es causalidad.)*
+**STATUS Fase 9**: **CERRADA** — próximo paso: **Fase 10** (árbol vs Random Forest → decisión #9).

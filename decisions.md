@@ -17,8 +17,8 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 6 | Split antes de limpiar + estratificado | 7 | ✅ |
 | 7 | Estrategia de imputación/encoding | 8 | ✅ |
 | 8 | Métrica principal (no accuracy) | 9 | ✅ |
-| 9 | Modelo ganador árbol vs RF | 11 | pendiente |
-| 10 | Importancia ≠ causalidad | 12 | pendiente |
+| 9 | Modelo ganador árbol vs RF | 10 | ✅ |
+| 10 | Importancia ≠ causalidad | 11 | pendiente |
 
 ---
 
@@ -162,4 +162,20 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **F1 como única guía**: promedia y puede ocultar Recall bajo si Precision compensa.
    - **ROC-AUC sola**: mide ranking, no el trade-off operativo FN vs FP.
 
-4. **Consecuencias**: Baselines en `reports/metrics_baseline.json` y `src/metrics.py`. `class_weight="balanced"` en entrenamiento. Desempate árbol vs RF por Recall (Fase 11). En defensa: explicar matriz de confusión (25 FN vs 91 FP en RF de referencia).
+4. **Consecuencias**: Baselines en `reports/metrics_baseline.json` y `src/metrics.py`. `class_weight="balanced"` en entrenamiento. Desempate árbol vs RF por Recall (Fase 10). En defensa: explicar matriz de confusión (25 FN vs 91 FP en RF de referencia).
+
+---
+
+## Decisión — Modelo ganador árbol vs Random Forest
+
+1. **Qué decidí**: **Random Forest** como modelo final (`models/churn_model.joblib`). Configuración: 200 árboles, `max_depth=8`, `class_weight="balanced"`. En test: **Recall 86,8%**, Precision 64,5%, F1 0,74, ROC-AUC 0,96. Supera al árbol de decisión (`max_depth=6`) en Recall por **+4,2 pp** (86,8% vs 82,6%).
+
+2. **Por qué**: Criterio acordado en Fase 9 = Recall. El RF detecta **165 de 190** churners vs **157** del árbol, con menos falsos positivos (91 vs 158). Las importancias confirman H1 (`Tenure` #1) y H2 (`Complain` #2). El ensemble reduce varianza sin perder interpretabilidad básica vía importancias.
+
+3. **Alternativas que descarté**:
+   - **Árbol de decisión como final**: peor Recall, Precision y ROC-AUC; útil como sanity check, no como producción.
+   - **Solo regresión logística**: no probada en este TP; árboles ya capturan no-linealidades (ej. `SatisfactionScore`).
+   - **Redes neuronales**: menos interpretables para la defensa oral y el reporte ejecutivo.
+   - **Elegir por accuracy**: RF gana igual (89,7% vs 83,0%), pero la decisión ya estaba fijada en Recall.
+
+4. **Consecuencias**: Detalle en `reports/11_modelo_ganador.md` y `reports/model_comparison.json`. Modelo listo para reporte ejecutivo e interpretación (Fase 11). Próximo paso: Fase 11 — importancia ≠ causalidad (decisión #10).

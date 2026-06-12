@@ -1,0 +1,121 @@
+{
+  "primary_metric": "recall",
+  "winner": "random_forest",
+  "models": {
+    "decision_tree": {
+      "name": "decision_tree",
+      "accuracy": 0.8304,
+      "recall": 0.8263,
+      "precision": 0.4984,
+      "f1": 0.6218,
+      "confusion": {
+        "tn": 778,
+        "fp": 158,
+        "fn": 33,
+        "tp": 157
+      },
+      "churners_missed_pct": 17.4,
+      "roc_auc": 0.8891,
+      "top_importances": [
+        {
+          "feature": "Tenure",
+          "importance": 0.5598
+        },
+        {
+          "feature": "Complain",
+          "importance": 0.0878
+        },
+        {
+          "feature": "CashbackAmount",
+          "importance": 0.0858
+        },
+        {
+          "feature": "SatisfactionScore",
+          "importance": 0.062
+        },
+        {
+          "feature": "DaySinceLastOrder",
+          "importance": 0.0366
+        },
+        {
+          "feature": "NumberOfAddress",
+          "importance": 0.0339
+        },
+        {
+          "feature": "PreferedOrderCat_Laptop & Accessory",
+          "importance": 0.0303
+        },
+        {
+          "feature": "OrderAmountHikeFromlastYear",
+          "importance": 0.0166
+        },
+        {
+          "feature": "NumberOfDeviceRegistered",
+          "importance": 0.0155
+        },
+        {
+          "feature": "WarehouseToHome",
+          "importance": 0.0148
+        }
+      ]
+    },
+    "random_forest": {
+      "name": "random_forest",
+      "accuracy": 0.897,
+      "recall": 0.8684,
+      "precision": 0.6445,
+      "f1": 0.7399,
+      "confusion": {
+        "tn": 845,
+        "fp": 91,
+        "fn": 25,
+        "tp": 165
+      },
+      "churners_missed_pct": 13.2,
+      "roc_auc": 0.9596,
+      "top_importances": [
+        {
+          "feature": "Tenure",
+          "importance": 0.329
+        },
+        {
+          "feature": "Complain",
+          "importance": 0.0936
+        },
+        {
+          "feature": "CashbackAmount",
+          "importance": 0.0774
+        },
+        {
+          "feature": "DaySinceLastOrder",
+          "importance": 0.0567
+        },
+        {
+          "feature": "WarehouseToHome",
+          "importance": 0.0392
+        },
+        {
+          "feature": "NumberOfAddress",
+          "importance": 0.0376
+        },
+        {
+          "feature": "SatisfactionScore",
+          "importance": 0.0357
+        },
+        {
+          "feature": "OrderAmountHikeFromlastYear",
+          "importance": 0.0284
+        },
+        {
+          "feature": "MaritalStatus_Single",
+          "importance": 0.0275
+        },
+        {
+          "feature": "CityTier",
+          "importance": 0.0259
+        }
+      ]
+    }
+  },
+  "winner_margin_recall": 0.0421
+}
