@@ -15,7 +15,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 4b | Narrativa consultoría — segunda compra | 5 | ✅ |
 | 5 | Veredicto Complain y leakage | 6 | ✅ |
 | 6 | Split antes de limpiar + estratificado | 7 | ✅ |
-| 7 | Estrategia de imputación/encoding | 8 | pendiente |
+| 7 | Estrategia de imputación/encoding | 8 | ✅ |
 | 8 | Métrica principal (no accuracy) | 9 | pendiente |
 | 9 | Modelo ganador árbol vs RF | 11 | pendiente |
 | 10 | Importancia ≠ causalidad | 12 | pendiente |
@@ -129,4 +129,21 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **70/30 o 90/10**: 80/20 balancea suficientes churners en test (~190) con train robusto (4.504 filas).
    - **Estratificar por otra variable** (ej. `Tenure`): no es el target; el desbalance crítico es `Churn`.
 
-4. **Consecuencias**: Script `src/split.py`. Train 16,83% churn / test 16,87% churn. Fase 8 aprende medianas y encoders **solo en train**. Próximo paso: Fase 8 (pipeline de preprocesamiento).
+4. **Consecuencias**: Script `src/split.py`. Train 16,83% churn / test 16,87% churn. Fase 8 aprende medianas y encoders **solo en train**.
+
+---
+
+## Decisión — Estrategia de imputación y encoding
+
+1. **Qué decidí**: Pipeline sklearn en `src/preprocess.py`: (1) banderas `{col}_missing` para las 7 columnas con nulos; (2) `SimpleImputer(median)` en las 20 columnas numéricas (13 features + 7 flags), medianas aprendidas en train; (3) `SimpleImputer(most_frequent)` + `OneHotEncoder(handle_unknown="ignore")` en las 5 categóricas; (4) sin `StandardScaler`. Salida: matrices 4504×41 y 1126×41 + `preprocessor.joblib`.
+
+2. **Por qué**: Ejecuta la decisión #3 sin leakage: el test nunca define medianas ni categorías. One-hot es adecuado para árboles/RF (sin orden falso). Las banderas preservan señal MNAR documentada en Fase 4. Ignorar unknown en test protege ante categorías no vistas.
+
+3. **Alternativas que descarté**:
+   - **Label encoding** en categóricas: impone orden artificial (ej. Single < Married).
+   - **Target encoding**: riesgo de leakage del `Churn` al preprocesar.
+   - **Imputar con 0 / media global**: no respeta la decisión de mediana en train ni el significado de cada variable.
+   - **StandardScaler**: innecesario para modelos basados en árboles del TP.
+   - **get_dummies en pandas antes del split**: mezclaría niveles de categorías entre train y test sin control de unknown.
+
+4. **Consecuencias**: Detalle en `reports/09_preprocesamiento.md`. Modelado (Fase 9+) carga `X_train.npy`, `X_test.npy` y `feature_names.json`. Próximo paso: Fase 9 (métrica principal — Recall vs accuracy).

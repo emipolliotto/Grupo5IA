@@ -22,33 +22,15 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
 
-from split import stratified_split
+from preprocess import add_missing_indicators, load_split_frames
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_PATH = ROOT / "data/raw/ecommerce.csv"
 OUT_PATH = ROOT / "reports/leakage_experiment_results.json"
 
 TARGET = "Churn"
 ID_COL = "CustomerID"
 LEAKY_COL = "Complain"
-NULL_COLS = [
-    "DaySinceLastOrder",
-    "OrderAmountHikeFromlastYear",
-    "Tenure",
-    "OrderCount",
-    "CouponUsed",
-    "HourSpendOnApp",
-    "WarehouseToHome",
-]
 RANDOM_STATE = 42
-TEST_SIZE = 0.2
-
-
-def add_missing_indicators(df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy()
-    for col in NULL_COLS:
-        out[f"{col}_missing"] = out[col].isnull().astype(int)
-    return out
 
 
 def build_xy(df: pd.DataFrame, include_complain: bool) -> tuple[pd.DataFrame, pd.Series]:
@@ -108,7 +90,7 @@ def evaluate_model(name: str, model, x_train, x_test, y_train, y_test) -> dict:
 
 
 def main() -> None:
-    train_df, test_df = stratified_split()
+    train_df, test_df = load_split_frames()
     train_df = add_missing_indicators(train_df)
     test_df = add_missing_indicators(test_df)
     x_train, y_train = build_xy(train_df, include_complain=True)

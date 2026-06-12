@@ -2,7 +2,7 @@
 
 **TP Churn E-commerce** · Dataset: `data/raw/ecommerce.csv` (5.630 clientes)  
 **Fecha**: 2026-06-11  
-**Notebook**: [`notebooks/01_eda.ipynb`](../notebooks/01_eda.ipynb) §9–10  
+**Notebook**: `[notebooks/01_eda.ipynb](../notebooks/01_eda.ipynb)` §9–10  
 **Decisión registrada**: `decisions.md` #4 y #4b
 
 ---
@@ -11,9 +11,9 @@
 
 Cada hipótesis sigue el formato de la consigna:
 
-1. **H₀ / H₁** en lenguaje de negocio  
-2. **Gráfico** en el notebook (sección indicada)  
-3. **Test estadístico** (χ² de independencia para variables categóricas/binarias; Mann-Whitney U para medias continuas)  
+1. **H₀ / H₁** en lenguaje de negocio
+2. **Gráfico** en el notebook (sección indicada)
+3. **Test estadístico** (χ² de independencia para variables categóricas/binarias; Mann-Whitney U para medias continuas)
 4. **Interpretación** para el gerente de Retención — sin tecnicismos
 
 **Tasa base de churn**: 16,8% (948 de 5.630 clientes).
@@ -25,10 +25,12 @@ Cada hipótesis sigue el formato de la consigna:
 > **H₀**: No hay diferencia de churn entre clientes con menos de 6 meses y el resto.  
 > **H₁**: Los clientes con `Tenure` < 6 meses tienen mayor probabilidad de churn.
 
-| Grupo | Clientes | % churn | Lift vs resto |
-|-------|---------:|--------:|--------------:|
-| Tenure 0–5 meses | 1.967 | **35,0%** | 6,7× |
-| Tenure ≥ 6 meses | 3.399 | **5,2%** | — |
+
+| Grupo            | Clientes | % churn   | Lift vs resto |
+| ---------------- | -------- | --------- | ------------- |
+| Tenure 0–5 meses | 1.967    | **35,0%** | 6,7×          |
+| Tenure ≥ 6 meses | 3.399    | **5,2%**  | —             |
+
 
 - **Gráfico**: notebook §7 — barplot `Tenure_bin` vs churn.  
 - **Test**: χ² (binario < 6 vs ≥ 6) → *p* < 0,001.  
@@ -43,10 +45,12 @@ Cada hipótesis sigue el formato de la consigna:
 > **H₀**: No hay diferencia de churn entre quienes se quejaron y quienes no.  
 > **H₁**: Los clientes con `Complain = 1` (queja en el último mes) tienen mayor churn.
 
-| Complain | Clientes | % churn | Lift |
-|:--------:|---------:|--------:|-----:|
-| No (0) | 4.026 | 10,9% | — |
-| Sí (1) | 1.604 | **31,7%** | 2,9× |
+
+| Complain | Clientes | % churn   | Lift |
+| -------- | -------- | --------- | ---- |
+| No (0)   | 4.026    | 10,9%     | —    |
+| Sí (1)   | 1.604    | **31,7%** | 2,9× |
+
 
 - **Gráfico**: notebook §7 — barplot `Complain` vs churn.  
 - **Test**: χ² → *p* < 0,001.  
@@ -61,18 +65,22 @@ Cada hipótesis sigue el formato de la consigna:
 > **H₀**: No hay diferencia de churn entre clientes con satisfacción baja y alta.  
 > **H₁**: A menor `SatisfactionScore`, mayor churn.
 
-| Grupo | Clientes | % churn |
-|-------|---------:|--------:|
-| Score 1–2 (bajo) | 1.750 | **11,9%** |
-| Score 4–5 (alto) | 2.182 | **20,5%** |
+
+| Grupo            | Clientes | % churn   |
+| ---------------- | -------- | --------- |
+| Score 1–2 (bajo) | 1.750    | **11,9%** |
+| Score 4–5 (alto) | 2.182    | **20,5%** |
+
 
 Detalle por score entre clientes nuevos (`Tenure` < 6):
 
+
 | Score | % churn (tenure < 6) |
-|:-----:|---------------------:|
-| 1 | 25,1% |
-| 3 | 35,7% |
-| 5 | **45,5%** |
+| ----- | -------------------- |
+| 1     | 25,1%                |
+| 3     | 35,7%                |
+| 5     | **45,5%**            |
+
 
 - **Gráfico**: notebook §7 y §9.1 — barplot `SatisfactionScore`; heatmap Tenure × Satisfacción.  
 - **Test**: χ² (score ≤ 2 vs ≥ 4) → *p* < 0,001 (diferencia en dirección **opuesta** a H₁).  
@@ -87,17 +95,21 @@ Detalle por score entre clientes nuevos (`Tenure` < 6):
 > **H₀**: No hay diferencia de churn entre quienes compraron hace poco y quienes llevan más tiempo sin pedir.  
 > **H₁**: A mayor `DaySinceLastOrder`, mayor churn.
 
-| Días sin pedir | Clientes | % churn |
-|----------------|---------:|--------:|
-| 0–7 días | 4.021 | **19,2%** |
-| 8–30 días | 1.300 | **9,4%** |
+
+| Días sin pedir | Clientes | % churn   |
+| -------------- | -------- | --------- |
+| 0–7 días       | 4.021    | **19,2%** |
+| 8–30 días      | 1.300    | **9,4%**  |
+
 
 Cruce con antigüedad:
 
-| Perfil | % churn | n |
-|--------|--------:|--:|
+
+| Perfil                    | % churn   | n     |
+| ------------------------- | --------- | ----- |
 | Tenure < 6 + compra 0–7 d | **36,0%** | 1.602 |
-| Tenure ≥ 6 + compra 0–7 d | 5,4% | 2.162 |
+| Tenure ≥ 6 + compra 0–7 d | 5,4%      | 2.162 |
+
 
 - **Gráfico**: notebook §7 y §9.2 — barplot `Days_bin`; cruce Tenure × recencia.  
 - **Test**: χ² (0–7 d vs 8–30 d) → *p* < 0,001 (dirección opuesta a H₁).  
@@ -112,11 +124,13 @@ Cruce con antigüedad:
 > **H₀**: No hay diferencia de churn entre clientes nuevos con buena experiencia reciente y clientes veteranos con buena experiencia.  
 > **H₁**: Clientes con `Tenure` < 6, `SatisfactionScore` ≥ 4, compra en los últimos 7 días y sin queja tienen churn elevado — patrón de **primera compra OK sin segunda compra**.
 
-| Segmento | Clientes | % churn |
-|----------|---------:|--------:|
-| **Happy churner** (H5) | 448 | **33,9%** |
-| Control: tenure ≥ 6 + sat ≥ 4 + sin queja | 965 | **2,7%** |
-| Base global | 5.630 | 16,8% |
+
+| Segmento                                  | Clientes | % churn   |
+| ----------------------------------------- | -------- | --------- |
+| **Happy churner** (H5)                    | 448      | **33,9%** |
+| Control: tenure ≥ 6 + sat ≥ 4 + sin queja | 965      | **2,7%**  |
+| Base global                               | 5.630    | 16,8%     |
+
 
 - **Gráfico**: notebook §9.3 — barplot comparativo de los tres grupos.  
 - **Test**: χ² (H5 vs control) → *p* < 0,001.  
@@ -131,11 +145,13 @@ Cruce con antigüedad:
 > **H₀**: No hay diferencia de churn entre clientes nuevos con perfil promocional y otros clientes nuevos.  
 > **H₁**: Clientes con `Tenure` < 6, cupones por encima de la mediana y cashback por debajo de la mediana churnean más — perfil de **captación por promo sin lealtad construida**.
 
-| Segmento | Clientes | % churn |
-|----------|---------:|--------:|
-| Promo capture (cupón alto + cashback bajo) | 412 | **41,3%** |
-| Otros clientes nuevos | 1.555 | 33,4% |
-| Cashback medio — activos vs churners | 180,6 vs 160,4 | — |
+
+| Segmento                                   | Clientes       | % churn   |
+| ------------------------------------------ | -------------- | --------- |
+| Promo capture (cupón alto + cashback bajo) | 412            | **41,3%** |
+| Otros clientes nuevos                      | 1.555          | 33,4%     |
+| Cashback medio — activos vs churners       | 180,6 vs 160,4 | —         |
+
 
 - **Gráfico**: notebook §9.4 — barplot segmento promo vs otros nuevos; boxplot `CashbackAmount` por churn.  
 - **Test**: χ² (H6 vs otros nuevos) → *p* < 0,01; Mann-Whitney U (`CashbackAmount` activo > churn) → *p* < 0,001.  
@@ -149,10 +165,12 @@ Cruce con antigüedad:
 
 > **H₁**: Más `NumberOfDeviceRegistered` se asocia a más churn **solo** en tenure < 6.
 
+
 | Dispositivos | Churn si tenure < 6 | Churn si tenure ≥ 6 |
-|:------------:|--------------------:|--------------------:|
-| 1 | 20,0% | 2,9% |
-| 4 | **35,6%** | 5,0% |
+| ------------ | ------------------- | ------------------- |
+| 1            | 20,0%               | 2,9%                |
+| 4            | **35,6%**           | 5,0%                |
+
 
 - **Gráfico**: notebook §9.5 — barplot dispositivos × tenure binario.  
 - **Interpretación**: Entre clientes nuevos, 4 dispositivos = 35,6% churn vs 20% con 1 dispositivo. Entre veteranos, el efecto casi desaparece. Lectura de consultoría: multidispositivo en clientes nuevos sugiere **exploración o prueba**, no hábito consolidado. No implica causalidad.
@@ -163,14 +181,16 @@ Cruce con antigüedad:
 
 ## Resumen ejecutivo para el gerente
 
-| # | Hipótesis | Resultado | Acción |
-|:-:|-----------|-----------|--------|
-| H1 | Clientes nuevos churnean más | ✅ | Programa 0–180 días |
-| H2 | Quejas predicen churn | ✅ | Playbook post-queja (urgente si tenure < 6) |
-| H3 | Baja satisfacción → churn | ❌ | No usar NPS como regla simple |
-| H4 | Inactividad → churn | ❌ | Churn ≠ “hace mucho que no compra” |
-| H5 | Happy churner | ✅ | Incentivar **segunda compra** |
-| H6 | Promo sin retención | ✅ | Auditar campañas de cupón |
+
+| #   | Hipótesis                    | Resultado | Acción                                      |
+| --- | ---------------------------- | --------- | ------------------------------------------- |
+| H1  | Clientes nuevos churnean más | ✅         | Programa 0–180 días                         |
+| H2  | Quejas predicen churn        | ✅         | Playbook post-queja (urgente si tenure < 6) |
+| H3  | Baja satisfacción → churn    | ❌         | No usar NPS como regla simple               |
+| H4  | Inactividad → churn          | ❌         | Churn ≠ “hace mucho que no compra”          |
+| H5  | Happy churner                | ✅         | Incentivar **segunda compra**               |
+| H6  | Promo sin retención          | ✅         | Auditar campañas de cupón                   |
+
 
 **Historia en una frase**: *El negocio convierte bien la primera compra en clientes nuevos, pero falla en convertirla en hábito — y una buena nota de satisfacción no garantiza que vuelvan.*
 
@@ -182,3 +202,4 @@ Cruce con antigüedad:
 - No forzar monotonía en `SatisfactionScore` ni `DaySinceLastOrder`.
 - Incluir flags `*_missing` (Fase 4) — especialmente `Tenure` y `WarehouseToHome`.
 - Métrica principal: **Recall** de churners (Fase 9).
+
