@@ -16,7 +16,7 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
 | 5 | Veredicto Complain y leakage | 6 | ✅ |
 | 6 | Split antes de limpiar + estratificado | 7 | ✅ |
 | 7 | Estrategia de imputación/encoding | 8 | ✅ |
-| 8 | Métrica principal (no accuracy) | 9 | pendiente |
+| 8 | Métrica principal (no accuracy) | 9 | ✅ |
 | 9 | Modelo ganador árbol vs RF | 11 | pendiente |
 | 10 | Importancia ≠ causalidad | 12 | pendiente |
 
@@ -146,4 +146,20 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **StandardScaler**: innecesario para modelos basados en árboles del TP.
    - **get_dummies en pandas antes del split**: mezclaría niveles de categorías entre train y test sin control de unknown.
 
-4. **Consecuencias**: Detalle en `reports/09_preprocesamiento.md`. Modelado (Fase 9+) carga `X_train.npy`, `X_test.npy` y `feature_names.json`. Próximo paso: Fase 9 (métrica principal — Recall vs accuracy).
+4. **Consecuencias**: Detalle en `reports/09_preprocesamiento.md`. Modelado (Fase 9+) carga `X_train.npy`, `X_test.npy` y `feature_names.json`.
+
+---
+
+## Decisión — Métrica principal (no accuracy)
+
+1. **Qué decidí**: La métrica **principal** para evaluar y comparar modelos es **Recall de `Churn = 1`** (sensibilidad: % de churners reales detectados). Secundarias para reportar: F1, Precision, ROC-AUC. **Accuracy descartada** como criterio de selección.
+
+2. **Por qué**: ~83% de la base es clase 0 — un modelo que predice siempre "activo" alcanza **83,1% accuracy** con **0% Recall** y pierde los 190 churners del test. El stakeholder (CRM) necesita minimizar falsos negativos (clientes que se van sin alerta). Recall cuantifica exactamente eso. El RF de referencia logra **86,8% Recall** (165/190 churners detectados).
+
+3. **Alternativas que descarté**:
+   - **Accuracy**: engañosa con desbalanceo 17/83; ya la supera el baseline ingenuo.
+   - **Precision como principal**: optimizarla sola deja churners sin detectar (alertas puras pero incompletas).
+   - **F1 como única guía**: promedia y puede ocultar Recall bajo si Precision compensa.
+   - **ROC-AUC sola**: mide ranking, no el trade-off operativo FN vs FP.
+
+4. **Consecuencias**: Baselines en `reports/metrics_baseline.json` y `src/metrics.py`. `class_weight="balanced"` en entrenamiento. Desempate árbol vs RF por Recall (Fase 11). En defensa: explicar matriz de confusión (25 FN vs 91 FP en RF de referencia).

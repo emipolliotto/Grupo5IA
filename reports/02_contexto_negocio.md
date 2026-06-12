@@ -88,7 +88,7 @@ El proyecto es exitoso si logramos:
 | **Ser accionable** | Cada factor fuerte debe traducirse a una acción posible (ej. queja → escalamiento; bajo cashback → oferta) |
 | **Honestidad** | Decir en la defensa qué variables son proxy de inactividad (`DaySinceLastOrder`) y cuáles tienen riesgo de leakage (`Complain` — ver `04_leakage_preliminar.md`) |
 
-La métrica técnica principal se formaliza en Fase 9; por ahora acordamos que **no usaremos accuracy** como métrica guía (clase minoritaria).
+La métrica técnica principal es **Recall de churn** (Fase 9 — ver `reports/10_metrica_principal.md`). **No usamos accuracy** como métrica guía (clase minoritaria).
 
 ---
 
