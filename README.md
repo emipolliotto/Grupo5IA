@@ -84,6 +84,17 @@ Grupo5IA/
 
 ---
 
+## Entregables clave
+
+| Documento | Descripción |
+|-----------|-------------|
+| [`reports/13_reporte_ejecutivo.md`](reports/13_reporte_ejecutivo.md) | **Reporte ejecutivo** para Gerente de Retención / CRM |
+| [`decisions.md`](decisions.md) | 10 decisiones metodológicas del TP |
+| [`reports/01_hipotesis.md`](reports/01_hipotesis.md) | Hipótesis de negocio H1–H7 |
+| [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb) | EDA exploratorio |
+
+---
+
 ## Links
 
 - Repo: https://github.com/emipolliotto/Grupo5IA

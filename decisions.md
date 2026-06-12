@@ -194,4 +194,4 @@ Registro de decisiones importantes del proyecto. Formato consigna: qué / por qu
    - **SHAP/causal inference avanzado** (DoWhy, IV): fuera de alcance y datos; no hay diseño experimental.
    - **Eliminar variables “no causales”**: todas las features predictivas son asociativas; el modelo perdería Recall sin ganar causalidad.
 
-4. **Consecuencias**: Documentado en `reports/12_importancia_no_causalidad.md`. Frases modelo para defensa oral incluidas. **Índice de decisiones: 10/10 completadas.** Entregables finales pendientes: reporte ejecutivo consolidado y defensa del 19/06.
+4. **Consecuencias**: Documentado en `reports/12_importancia_no_causalidad.md`. Frases modelo para defensa oral incluidas. **Índice de decisiones: 10/10 completadas.** Reporte ejecutivo consolidado en `reports/13_reporte_ejecutivo.md`.
